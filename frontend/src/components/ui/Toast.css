@@ -1,0 +1,110 @@
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 400px;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: rgba(26, 26, 46, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-lg);
+    cursor: pointer;
+    animation: slideInRight 0.3s ease-out;
+    transition: all 0.3s ease;
+}
+
+.toast:hover {
+    transform: translateX(-4px);
+    box-shadow: var(--shadow-lg), 0 0 20px rgba(139, 92, 246, 0.2);
+}
+
+.toast__icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.toast--success .toast__icon {
+    background: var(--color-success);
+    color: white;
+}
+
+.toast--error .toast__icon {
+    background: var(--color-error);
+    color: white;
+}
+
+.toast--warning .toast__icon {
+    background: var(--color-warning);
+    color: white;
+}
+
+.toast--info .toast__icon {
+    background: var(--color-accent);
+    color: white;
+}
+
+.toast__message {
+    flex: 1;
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.toast__close {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    font-size: 16px;
+}
+
+.toast__close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .toast-container {
+        left: 20px;
+        right: 20px;
+        max-width: none;
+    }
+}

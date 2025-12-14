@@ -1,0 +1,402 @@
+# Django + React JWT Auth Template - Cursor Rules
+
+## Project Overview
+
+This is a full-stack Django + React application with JWT authentication, TanStack Query for data fetching, and a modern UI with TypeScript. Follow these rules strictly when making changes or additions.
+
+## Tech Stack
+
+### Backend
+- Django 6.0 with Django REST Framework
+- djangorestframework-simplejwt for JWT authentication
+- Python 3.12+
+
+### Frontend
+- React 19 with TypeScript 5.9
+- TanStack Query v5 for data fetching
+- Vite 7 for build tooling
+- React Router v7 for routing
+- Axios for HTTP requests
+- Vanilla CSS with CSS custom properties
+
+## Frontend Architecture Rules
+
+### File Organization
+
+#### `/src/components/ui/` - Reusable UI Components
+- **Purpose**: Presentational components used across multiple pages
+- **What goes here**: Button, Input, Card, Modal, Dropdown, Spinner, Toast, Alert
+- **Rules**:
+  - Must be highly reusable and generic
+  - Should accept props for customization
+  - Include variants (primary, secondary, etc.)
+  - Must have corresponding `.css` file
+  - Export as default
+- **Example**: `Button.tsx`, `Input.tsx`, `Card.tsx`
+
+#### `/src/components/layout/` - Layout Components
+- **Purpose**: Layout wrappers that define page structure
+- **What goes here**: Page layouts, headers, footers, sidebars, navigation
+- **Rules**:
+  - Should wrap page content
+  - Handle common layout patterns
+  - Must have corresponding `.css` file
+  - Export as default
+- **Example**: `AuthLayout.tsx`, `DashboardLayout.tsx`
+
+#### `/src/components/` (root) - Feature Components
+- **Purpose**: Feature-specific components that don't fit in ui/ or layout/
+- **What goes here**: ProtectedRoute, complex feature components
+- **Rules**:
+  - Use for route protection and feature-specific logic
+  - Export as default
+- **Example**: `ProtectedRoute.tsx`
+
+#### `/src/pages/` - Page Components
+- **Purpose**: Top-level components representing routes
+- **What goes here**: One file per route
+- **Rules**:
+  - Each file represents one route in the application
+  - Compose using components from `/components/`
+  - Use layout components for consistent structure
+  - May have corresponding `.css` file for page-specific styles
+  - Export as default
+  - Name should match the route (e.g., `Profile.tsx` for `/profile`)
+- **Example**: `Login.tsx`, `Register.tsx`, `Home.tsx`
+
+#### `/src/hooks/` - Custom React Hooks
+- **Purpose**: Reusable logic as custom hooks
+- **What goes here**: Data fetching hooks, form handling, authentication logic
+- **Rules**:
+  - Must start with `use` prefix
+  - Use TanStack Query for data fetching (`useQuery`, `useMutation`)
+  - Export as named export
+  - One hook per file
+  - Include proper TypeScript types
+- **Example**: `useAuth.ts`, `useUser.ts`, `useLogout.ts`
+
+#### `/src/services/` - API Service Layer
+- **Purpose**: API communication logic
+- **What goes here**: API endpoint functions, request/response transformations
+- **Rules**:
+  - Use the configured axios instance from `api.ts`
+  - Export functions as named exports
+  - Include proper TypeScript types for requests and responses
+  - Keep functions pure (no side effects)
+  - One service file per domain (e.g., `auth.ts`, `user.ts`)
+- **Example**: `api.ts`, `auth.ts`
+
+#### `/src/contexts/` - React Contexts
+- **Purpose**: Global state management using Context API
+- **What goes here**: Theme context, notification context, global app state
+- **Rules**:
+  - Export both Provider and custom hook
+  - Custom hook should throw error if used outside provider
+  - Name hook as `use{ContextName}` (e.g., `useToast`)
+  - Export as named exports
+- **Example**: `ToastContext.tsx`
+
+#### `/src/utils/` - Utility Functions
+- **Purpose**: Pure helper functions
+- **What goes here**: Validation, formatting, token management, calculations
+- **Rules**:
+  - Must be pure functions (no side effects)
+  - Export as named exports
+  - Include proper TypeScript types
+  - Group related utilities in same file
+- **Example**: `validation.ts`, `token.ts`
+
+#### `/src/types/` - TypeScript Types
+- **Purpose**: Shared TypeScript interfaces and types
+- **What goes here**: API response types, component prop types, domain models
+- **Rules**:
+  - Export all types as named exports
+  - Use `interface` for object shapes
+  - Use `type` for unions, intersections, and primitives
+  - Prefix interfaces with `I` only if there's a naming conflict
+- **Example**: `index.ts`
+
+#### `/src/config/` - Configuration Files
+- **Purpose**: Application configuration
+- **What goes here**: TanStack Query config, third-party library configs
+- **Rules**:
+  - Export configuration objects as named exports
+  - Keep environment-specific values in constants
+- **Example**: `queryClient.ts`
+
+## Coding Standards
+
+### TypeScript
+- Always use TypeScript, never plain JavaScript
+- Use `type` keyword for type-only imports when using `verbatimModuleSyntax`
+  ```typescript
+  import { type ButtonHTMLAttributes } from 'react';
+  import axios, { type AxiosError } from 'axios';
+  ```
+- Prefer `interface` for object types, `type` for unions/intersections
+- Always type function parameters and return values
+- Use `const` by default, `let` only when reassignment is needed
+- Never use `any`, use `unknown` if type is truly unknown
+
+### React Components
+- Use functional components with hooks
+- Use `React.FC` for component types
+- Destructure props in function parameters
+- Use default exports for components
+- Component file structure:
+  ```typescript
+  import React from 'react';
+  import './ComponentName.css';
+  
+  interface ComponentNameProps {
+    // props
+  }
+  
+  const ComponentName: React.FC<ComponentNameProps> = ({ prop1, prop2 }) => {
+    // hooks
+    // handlers
+    // render
+    return (
+      <div className="component-name">
+        {/* JSX */}
+      </div>
+    );
+  };
+  
+  export default ComponentName;
+  ```
+
+### TanStack Query
+- Always use TanStack Query for data fetching
+- Use `useQuery` for GET requests
+- Use `useMutation` for POST/PUT/DELETE requests
+- Always provide `queryKey` as array
+- Use `queryFn` for the fetching function
+- Handle loading and error states
+- Example:
+  ```typescript
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['user', userId],
+    queryFn: () => getUser(userId),
+  });
+  
+  const mutation = useMutation({
+    mutationFn: (data) => createUser(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+  });
+  ```
+
+### Styling
+- Use Vanilla CSS with CSS custom properties (no CSS-in-JS, no Tailwind)
+- Each component should have its own `.css` file
+- Use CSS custom properties from `index.css` for colors, spacing, etc.
+- Class naming convention: BEM-like (`.component-name__element--modifier`)
+- Always use CSS variables for:
+  - Colors: `var(--color-primary)`, `var(--color-secondary)`, etc.
+  - Spacing: `var(--spacing-sm)`, `var(--spacing-md)`, etc.
+  - Border radius: `var(--radius-sm)`, `var(--radius-md)`, etc.
+  - Shadows: `var(--shadow-sm)`, `var(--shadow-md)`, etc.
+
+### Form Handling
+- Use controlled components
+- Validate using functions from `utils/validation.ts`
+- Show errors inline using Input component's `error` prop
+- Use Toast notifications for submission feedback
+- Example:
+  ```typescript
+  const [username, setUsername] = useState('');
+  const [errors, setErrors] = useState<{ username?: string }>({});
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const validation = validateUsername(username);
+    if (!validation.isValid) {
+      setErrors({ username: validation.error });
+      return;
+    }
+    // submit
+  };
+  ```
+
+### API Integration
+- Always use the axios instance from `api.ts`
+- Create service functions in `/services/`
+- Use service functions in hooks, never call API directly in components
+- Example flow:
+  1. Service: `export const getUser = async (id: number) => { ... }`
+  2. Hook: `export const useUser = (id: number) => useQuery({ ... })`
+  3. Component: `const { data: user } = useUser(userId);`
+
+### Authentication
+- Use token utilities from `utils/token.ts`
+- Never access localStorage directly for tokens
+- Use `ProtectedRoute` component for authenticated routes
+- Use `useUser` hook to get current user data
+- Example:
+  ```typescript
+  import { ProtectedRoute } from './components/ProtectedRoute';
+  
+  <Route 
+    path="/dashboard" 
+    element={
+      <ProtectedRoute>
+        <Dashboard />
+      </ProtectedRoute>
+    } 
+  />
+  ```
+
+## Backend Rules
+
+### Django Views
+- Use Django REST Framework for all API endpoints
+- Use `@api_view` decorator for function-based views
+- Use `permission_classes` for authentication
+- Return `Response` objects
+- Example:
+  ```python
+  from rest_framework.decorators import api_view, permission_classes
+  from rest_framework.permissions import IsAuthenticated
+  from rest_framework.response import Response
+  
+  @api_view(['GET'])
+  @permission_classes([IsAuthenticated])
+  def get_profile(request):
+      return Response({'username': request.user.username})
+  ```
+
+### URL Patterns
+- Use `path()` not `url()`
+- Include API version in URL if applicable
+- Group related endpoints in app-level `urls.py`
+- Example:
+  ```python
+  from django.urls import path
+  from .views import get_profile
+  
+  urlpatterns = [
+      path('profile/', get_profile, name='profile'),
+  ]
+  ```
+
+### Serializers
+- Use Django REST Framework serializers
+- Inherit from `serializers.ModelSerializer` when possible
+- Override `create()` and `update()` for custom logic
+- Use `extra_kwargs` for field-level configuration
+
+## Common Patterns
+
+### Adding a New Page
+1. Create page component in `/src/pages/PageName.tsx`
+2. Create corresponding CSS file `/src/pages/PageName.css`
+3. Use appropriate layout component (AuthLayout or DashboardLayout)
+4. Add route in `/src/App.tsx`
+5. Wrap with ProtectedRoute if authentication required
+
+### Adding a New API Endpoint
+1. Backend: Create view in Django app's `views.py`
+2. Backend: Add URL pattern in app's `urls.py`
+3. Frontend: Create service function in `/src/services/`
+4. Frontend: Create hook in `/src/hooks/` using TanStack Query
+5. Frontend: Use hook in component
+
+### Creating a Reusable Component
+1. Create component in `/src/components/ui/ComponentName.tsx`
+2. Create CSS file `/src/components/ui/ComponentName.css`
+3. Define props interface
+4. Implement variants if applicable
+5. Export as default
+6. Use in pages
+
+## Error Handling
+
+### Frontend
+- Use Toast notifications for user-facing errors
+- Handle loading states with Spinner component
+- Show inline errors for form validation
+- Use error boundaries for unexpected errors
+
+### Backend
+- Return appropriate HTTP status codes
+- Include error messages in response
+- Use Django's exception handling
+
+## Performance
+
+### Frontend
+- Use TanStack Query for automatic caching
+- Lazy load routes if needed
+- Optimize images and assets
+- Use React.memo for expensive components sparingly
+
+### Backend
+- Use database indexes
+- Optimize queries (select_related, prefetch_related)
+- Use pagination for large datasets
+
+## Security
+
+### Frontend
+- Never store sensitive data in localStorage except tokens
+- Validate all user input
+- Use HTTPS in production
+- Sanitize user-generated content
+
+### Backend
+- Use Django's CSRF protection
+- Validate all input
+- Use parameterized queries
+- Keep SECRET_KEY secret
+- Set DEBUG=False in production
+
+## Testing
+
+### Frontend
+- Write tests for utility functions
+- Test custom hooks
+- Test critical user flows
+
+### Backend
+- Write tests for API endpoints
+- Test authentication flows
+- Test data validation
+
+## When in Doubt
+
+1. Check existing code for similar patterns
+2. Follow the structure defined in this file
+3. Prioritize consistency over cleverness
+4. Keep components small and focused
+5. Use TypeScript types everywhere
+6. Use TanStack Query for all data fetching
+7. Use Toast notifications for user feedback
+8. Follow the "Where to Put What" guide in README.md
+
+## Forbidden Practices
+
+- ❌ Don't use `any` type in TypeScript
+- ❌ Don't access localStorage directly for tokens
+- ❌ Don't call API directly in components (use hooks)
+- ❌ Don't use inline styles (use CSS files)
+- ❌ Don't use CSS-in-JS or Tailwind
+- ❌ Don't create components in `/pages/` directory
+- ❌ Don't skip error handling
+- ❌ Don't hardcode API URLs (use environment variables)
+- ❌ Don't commit sensitive data
+- ❌ Don't use class components (use functional components)
+
+## Required Practices
+
+- ✅ Always use TypeScript
+- ✅ Always use TanStack Query for data fetching
+- ✅ Always use the axios instance from `api.ts`
+- ✅ Always use Toast for user feedback
+- ✅ Always validate user input
+- ✅ Always handle loading and error states
+- ✅ Always use CSS custom properties
+- ✅ Always follow the folder structure
+- ✅ Always export components as default
+- ✅ Always export hooks and utilities as named exports

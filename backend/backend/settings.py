@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
+import os
+from dotenv import load_dotenv
+
+load_dotenv() 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +31,12 @@ SECRET_KEY = 'django-insecure-c5bxxf-j42^cc5so^wa7-pt#ip!=sm6hyhz&wrjxb3zw$2pnh2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+CORS_ALLOW_CREDENTIALS = True
 
 
 # Application definition
@@ -38,15 +48,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+    'corsheaders',
     
     'rest_framework',
     'api',
+    'users'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -133,3 +145,73 @@ TEMPLATES[0]['DIRS']=[
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+# DRF CONFIG
+REST_FRAMEWORK = {
+   
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+     
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+  
+}
+
+SECRET_JWT_KEY=os.getenv('SECRET_KEY')
+APP_NAME=os.getenv('APP_NAME')
+
+
+SIMPLE_JWT = {
+    # 🔐 Token lifetimes
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),        # Access token valid for 1 week
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),      # Refresh token valid for 30 days
+
+    # 🔁 Refresh token rotation (VERY IMPORTANT)
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+
+    # 👤 User tracking
+    "UPDATE_LAST_LOGIN": True,
+
+    # 🔑 Signing & verification
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_JWT_KEY,
+    "VERIFYING_KEY": None,
+
+    # 🔍 JWT claims
+    "AUDIENCE": None,
+    "ISSUER": APP_NAME,        
+    "LEEWAY": 30,                    
+
+    # 📦 Authorization header
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+
+    # 👥 User identification
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
+ 
+
+    # 🔐 Authentication behavior
+    "USER_AUTHENTICATION_RULE": (
+        "rest_framework_simplejwt.authentication.default_user_authentication_rule"
+    ),
+
+    # 🎟 Token classes
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
+
+    "TOKEN_OBTAIN_SERIALIZER":
+        "users.serializers.CustomTokenObtainPairSerializer",
+
+    # 🆔 Token identifiers
+    "JTI_CLAIM": "jti",
+
+    # 🚫 Token revocation (password change invalidates tokens)
+    "CHECK_REVOKE_TOKEN": True,
+    "REVOKE_TOKEN_CLAIM": "hash_password",
+
+    # ✅ Only allow active users
+    "CHECK_USER_IS_ACTIVE": True,
+}
