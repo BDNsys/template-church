@@ -275,3 +275,8 @@ LOGIN_REDIRECT_URL = '/api/users/auth/google/callback/success/'
 
 # Skip the intermediate "You are about to sign in..." page
 SOCIALACCOUNT_LOGIN_ON_GET = True
+
+
+
+#ENV VARIABLES 
+FRONTEND_BASE_URL=os.getenv("FRONTEND_BASE_URL", default="http://localhost:8000")

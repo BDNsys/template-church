@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework import generics
 from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny
+from django.conf import settings
 
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -25,14 +26,14 @@ def google_callback(request):
     
     if not request.user.is_authenticated:
         print("DEBUG: User not authenticated in callback. Redirecting to frontend login with error.")
-        return redirect("http://localhost:8000/login?error=auth_failed")
+        return redirect(f"{settings.FRONTEND_BASE_URL}/login?error=auth_failed")
 
     user = request.user  # already authenticated by allauth
 
     refresh = RefreshToken.for_user(user)
     print(f"DEBUG: Generated tokens for user {user.username}")
 
-    frontend_callback = "http://localhost:8000/auth/callback"
+    frontend_callback = f"{settings.FRONTEND_BASE_URL}/auth/callback"
 
     return redirect(
         f"{frontend_callback}"
