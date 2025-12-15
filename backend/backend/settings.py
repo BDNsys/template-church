@@ -33,10 +33,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:5173",
+# ]
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Application definition
@@ -51,8 +52,22 @@ INSTALLED_APPS = [
     'corsheaders',
     
     'rest_framework',
+    'rest_framework.authtoken',
+    
+    
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+    
+    
     'api',
     'users'
+    
+    
 ]
 
 MIDDLEWARE = [
@@ -64,6 +79,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware'
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -154,6 +170,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
      
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        
     )
   
 }
@@ -215,3 +232,51 @@ SIMPLE_JWT = {
     # ✅ Only allow active users
     "CHECK_USER_IS_ACTIVE": True,
 }
+
+
+#all auth config
+
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+SOCIAL_AUTH_GOOGLE_CLIENT_ID=os.getenv("SOCIAL_AUTH_GOOGLE_CLIENT_ID", default="")
+SOCIAL_AUTH_GOOGLE_CLIENT_SECRET=os.getenv("SOCIAL_AUTH_GOOGLE_CLIENT_SECRET", default="")
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+            'prompt': 'select_account',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+        'APP': {
+            'client_id':SOCIAL_AUTH_GOOGLE_CLIENT_ID,
+            'secret': SOCIAL_AUTH_GOOGLE_CLIENT_SECRET,
+            'key': ''
+        }
+    }
+}
+
+# Allauth settings
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+# Redirect to this URL after successful login
+LOGIN_REDIRECT_URL = '/api/users/auth/google/callback/success/'
+
+# Skip the intermediate "You are about to sign in..." page
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+
+
+#ENV VARIABLES 
+FRONTEND_BASE_URL=os.getenv("FRONTEND_BASE_URL", default="http://localhost:8000")

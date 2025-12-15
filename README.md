@@ -28,12 +28,19 @@ A modern, production-ready full-stack authentication template combining Django's
 - 🔍 **Form Validation** - Real-time validation with password strength indicator
 - 🎪 **React Query DevTools** - Debug queries in development
 
+### Google Authentication
+- 🔐 **Seamless OAuth2 Integration** - Login with Google using `django-allauth`
+- 🎨 **Custom UI** - Beautiful glassmorphism Google login button
+- 🔄 **Auto Account Selection** - Forces account chooser for better UX
+- 🛡️ **Secure Callback Handling** - Validates state and tokens securely
+
 ## 🛠️ Tech Stack
 
 ### Backend
 - **Django 6.0** - Web framework
 - **Django REST Framework** - API development
 - **djangorestframework-simplejwt** - JWT authentication
+- **django-allauth** - Social authentication
 - **django-cors-headers** - CORS support
 - **Python 3.12+**
 
@@ -78,7 +85,7 @@ source venv/bin/activate
 venv\Scripts\activate
 
 # Install dependencies
-pip install django djangorestframework djangorestframework-simplejwt django-cors-headers python-dotenv
+pip install django djangorestframework djangorestframework-simplejwt django-cors-headers django-allauth python-dotenv
 
 # Run migrations
 python manage.py migrate
@@ -133,7 +140,8 @@ django-react-jwt-authtemplate/
 │   │   │   │   ├── Input.tsx     # Input with floating labels
 │   │   │   │   ├── Card.tsx      # Card with glassmorphism
 │   │   │   │   ├── Toast.tsx     # Toast notifications
-│   │   │   │   └── Spinner.tsx   # Loading spinner
+│   │   │   │   ├── Spinner.tsx   # Loading spinner
+│   │   │   │   └── GoogleLoginButton.tsx # Google Login Button
 │   │   │   ├── layout/           # Layout components
 │   │   │   │   ├── AuthLayout.tsx      # Auth pages layout
 │   │   │   │   └── DashboardLayout.tsx # Dashboard layout
@@ -142,7 +150,8 @@ django-react-jwt-authtemplate/
 │   │   ├── pages/                # Page components
 │   │   │   ├── Login.tsx         # Login page
 │   │   │   ├── Register.tsx      # Registration page
-│   │   │   └── Home.tsx          # Dashboard/home page
+│   │   │   ├── Home.tsx          # Dashboard/home page
+│   │   │   └── GoogleCallback.tsx # OAuth callback handler
 │   │   │
 │   │   ├── hooks/                # Custom React hooks
 │   │   │   ├── useAuth.ts        # Auth mutations (login/register)
@@ -524,11 +533,17 @@ const { data: profile, isLoading } = useProfile();
 Create `.env` in backend directory:
 
 ```env
+# Django Settings
 SECRET_KEY=your-secret-key-here
 DEBUG=False
 ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com
 DATABASE_URL=your-database-url
 CORS_ALLOWED_ORIGINS=https://yourdomain.com
+
+# Google OAuth Settings
+SOCIAL_AUTH_GOOGLE_CLIENT_ID=your_google_client_id
+SOCIAL_AUTH_GOOGLE_CLIENT_SECRET=your_google_client_secret
+FRONTEND_BASE_URL=http://localhost:5173
 ```
 
 ### Production Checklist
