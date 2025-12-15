@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import AuthLayout from '../components/layout/AuthLayout';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
+import GoogleLoginButton from '../components/ui/GoogleLoginButton';
 import { useLogin } from '../hooks/useAuth';
 import { validateUsername, validatePassword } from '../utils/validation';
 
@@ -67,6 +68,21 @@ const Login: React.FC = () => {
                 >
                     Sign In
                 </Button>
+
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '16px',
+                    margin: '24px 0'
+                }}>
+                    <div style={{ flex: 1, height: '1px', background: 'rgba(255, 255, 255, 0.1)' }} />
+                    <span style={{ color: 'var(--text-tertiary)', fontSize: '14px', fontWeight: 500 }}>
+                        OR
+                    </span>
+                    <div style={{ flex: 1, height: '1px', background: 'rgba(255, 255, 255, 0.1)' }} />
+                </div>
+
+                <GoogleLoginButton fullWidth size="lg" />
 
                 <div style={{ textAlign: 'center', marginTop: '16px' }}>
                     <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
