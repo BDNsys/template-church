@@ -23,6 +23,7 @@ from django.views.static import serve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/users/', include('users.urls')),
     path('api/', include('api.urls')),
     
     # Serve static assets from the build directory

@@ -1,10 +1,15 @@
-from django.contrib.auth.models import User
+from django.conf import settings
 from rest_framework import serializers
+
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "username", "password"]
+        fields = ["id", "username", "password", "phone_number", "is_approved_member", "is_global_auditor"]
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
@@ -15,6 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from api.models.groups_models import GroupMembership
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -24,7 +30,21 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         # ✅ Custom claims
         token["username"] = user.username
         token["email"] = user.email
+        token["phone_number"] = user.phone_number
+        token["is_approved_member"] = user.is_approved_member
+        token["is_global_auditor"] = user.is_global_auditor
         token["is_staff"] = user.is_staff
         token["is_superuser"] = user.is_superuser
+
+        # Add group memberships
+        memberships = GroupMembership.objects.filter(user=user)
+        groups_data = []
+        for membership in memberships:
+            groups_data.append({
+                "group_id": membership.group.id,
+                "group_name": membership.group.name,
+                "role": membership.role
+            })
+        token["groups"] = groups_data
 
         return token

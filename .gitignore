@@ -145,3 +145,7 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 *.lnk
+
+# uv
+.venv
+.uv
