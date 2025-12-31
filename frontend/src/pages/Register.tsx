@@ -51,7 +51,7 @@ const Register: React.FC = () => {
             title="Create Account"
             subtitle="Join us and start your journey"
         >
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <form onSubmit={handleSubmit} className="space-y-6">
                 <Input
                     label="Username"
                     type="text"
@@ -73,22 +73,17 @@ const Register: React.FC = () => {
                         icon={<span>🔒</span>}
                     />
                     {password && (
-                        <div style={{ marginTop: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <div style={{
-                                flex: 1,
-                                height: '4px',
-                                background: 'rgba(255,255,255,0.1)',
-                                borderRadius: '2px',
-                                overflow: 'hidden',
-                            }}>
-                                <div style={{
-                                    width: `${(passwordStrength.score / 4) * 100}%`,
-                                    height: '100%',
-                                    background: passwordStrength.color,
-                                    transition: 'all 0.3s ease',
-                                }}></div>
+                        <div className="mt-2 flex items-center gap-2">
+                            <div className="flex-1 h-1 bg-gray-700 rounded-full overflow-hidden">
+                                <div
+                                    className="h-full transition-all duration-300 ease-out"
+                                    style={{
+                                        width: `${(passwordStrength.score / 4) * 100}%`,
+                                        backgroundColor: passwordStrength.color,
+                                    }}
+                                ></div>
                             </div>
-                            <span style={{ fontSize: '12px', color: passwordStrength.color, fontWeight: 600 }}>
+                            <span className="text-xs font-semibold" style={{ color: passwordStrength.color }}>
                                 {passwordStrength.label}
                             </span>
                         </div>
@@ -115,25 +110,23 @@ const Register: React.FC = () => {
                     Create Account
                 </Button>
 
-                <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '16px',
-                    margin: '24px 0'
-                }}>
-                    <div style={{ flex: 1, height: '1px', background: 'rgba(255, 255, 255, 0.1)' }} />
-                    <span style={{ color: 'var(--text-tertiary)', fontSize: '14px', fontWeight: 500 }}>
-                        OR
-                    </span>
-                    <div style={{ flex: 1, height: '1px', background: 'rgba(255, 255, 255, 0.1)' }} />
+                <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-600"></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                        <span className="px-2 bg-gray-800 text-gray-400">
+                            OR
+                        </span>
+                    </div>
                 </div>
 
                 <GoogleLoginButton fullWidth size="lg" />
 
-                <div style={{ textAlign: 'center', marginTop: '16px' }}>
-                    <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
+                <div className="text-center mt-4">
+                    <span className="text-sm text-gray-400">
                         Already have an account?{' '}
-                        <Link to="/login" style={{ color: 'var(--color-primary)', fontWeight: 600 }}>
+                        <Link to="/login" className="font-medium text-indigo-400 hover:text-indigo-300">
                             Sign in
                         </Link>
                     </span>

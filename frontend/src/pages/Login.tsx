@@ -38,7 +38,7 @@ const Login: React.FC = () => {
             title="Welcome Back"
             subtitle="Sign in to continue to your account"
         >
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <form onSubmit={handleSubmit} className="space-y-6">
                 <Input
                     label="Username"
                     type="text"
@@ -69,25 +69,23 @@ const Login: React.FC = () => {
                     Sign In
                 </Button>
 
-                <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '16px',
-                    margin: '24px 0'
-                }}>
-                    <div style={{ flex: 1, height: '1px', background: 'rgba(255, 255, 255, 0.1)' }} />
-                    <span style={{ color: 'var(--text-tertiary)', fontSize: '14px', fontWeight: 500 }}>
-                        OR
-                    </span>
-                    <div style={{ flex: 1, height: '1px', background: 'rgba(255, 255, 255, 0.1)' }} />
+                <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-600"></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                        <span className="px-2 bg-gray-800 text-gray-400">
+                            OR
+                        </span>
+                    </div>
                 </div>
 
                 <GoogleLoginButton fullWidth size="lg" />
 
-                <div style={{ textAlign: 'center', marginTop: '16px' }}>
-                    <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
+                <div className="text-center mt-4">
+                    <span className="text-sm text-gray-400">
                         Don't have an account?{' '}
-                        <Link to="/register" style={{ color: 'var(--color-primary)', fontWeight: 600 }}>
+                        <Link to="/register" className="font-medium text-indigo-400 hover:text-indigo-300">
                             Sign up
                         </Link>
                     </span>

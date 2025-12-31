@@ -1,9 +1,17 @@
+export interface GroupMembership {
+    group_id: number;
+    group_name: string;
+    role: 'MAKER' | 'APPROVER' | 'AUDITOR';
+    group_type?: 'LEADERSHIP' | 'FINANCE' | 'GENERAL' | 'TECH'; // Optional as it might not be in token directly unless added
+}
+
 export interface User {
     id: number;
     username: string;
     email: string;
     is_staff: boolean;
     is_superuser: boolean;
+    groups?: GroupMembership[];
 }
 
 export interface LoginCredentials {
@@ -28,6 +36,7 @@ export interface DecodedToken {
     email: string;
     is_staff: boolean;
     is_superuser: boolean;
+    groups?: GroupMembership[];
     exp: number;
     iat: number;
 }

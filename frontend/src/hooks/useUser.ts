@@ -17,6 +17,7 @@ export const useUser = () => {
                 email: userData.email,
                 is_staff: userData.is_staff,
                 is_superuser: userData.is_superuser,
+                groups: userData.groups,
             };
         },
         staleTime: 1000 * 60 * 5, // 5 minutes

@@ -1,5 +1,4 @@
-import React, { type InputHTMLAttributes, useState } from 'react';
-import './Input.css';
+import React, { type InputHTMLAttributes } from 'react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     label?: string;
@@ -16,26 +15,29 @@ const Input: React.FC<InputProps> = ({
     className = '',
     ...props
 }) => {
-    const [isFocused, setIsFocused] = useState(false);
-    const hasValue = props.value !== '' && props.value !== undefined;
-
     return (
-        <div className={`input-wrapper ${fullWidth ? 'input-wrapper--full-width' : ''} ${className}`}>
-            <div className={`input-container ${isFocused || hasValue ? 'input-container--active' : ''} ${error ? 'input-container--error' : ''}`}>
-                {icon && <div className="input__icon">{icon}</div>}
+        <div className={`${fullWidth ? 'w-full' : ''} ${className}`}>
+            {label && (
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                    {label}
+                </label>
+            )}
+            <div className="relative rounded-md shadow-sm">
+                {icon && (
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                        {icon}
+                    </div>
+                )}
                 <input
-                    className="input"
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
+                    className={`
+                        block w-full rounded-md border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-3
+                        ${icon ? 'pl-10' : 'pl-3'}
+                        ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}
+                    `}
                     {...props}
                 />
-                {label && (
-                    <label className={`input__label ${isFocused || hasValue ? 'input__label--floating' : ''}`}>
-                        {label}
-                    </label>
-                )}
             </div>
-            {error && <span className="input__error">{error}</span>}
+            {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
         </div>
     );
 };
