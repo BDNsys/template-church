@@ -1,5 +1,5 @@
 import React from 'react';
-import { useVideos } from '../../hooks/useContent';
+import { useVideos } from '../../hooks/video/useVideo';
 
 const Videos: React.FC = () => {
     const { data: videos, isLoading, error } = useVideos();

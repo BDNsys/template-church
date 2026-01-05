@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from api.models.groups_models import  ChurchGroup, GroupMembership
 from api.serializers.church_group_serializers import (
   
-    ChurchGroupSerializer, GroupMembershipSerializer, 
+    ChurchGroupSerializer, GroupMembershipSerializer, AddUserToGroupSerializer
 
 )
 from api.permissions import (
@@ -30,3 +30,8 @@ class GroupMembershipViewSet(viewsets.ModelViewSet):
     queryset = GroupMembership.objects.all()
     serializer_class = GroupMembershipSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return AddUserToGroupSerializer
+        return super().get_serializer_class()

@@ -17,20 +17,24 @@ class IsApprovedMember(permissions.BasePermission):
 # 2. Group-Specific Roles
 class IsGroupMember(permissions.BasePermission):
     """
-    Allows access if the user is a member of the group.
-    Assumes `group_pk` or `pk` (if view is for group) is available in view.kwargs.
+    Checks if the user belongs to a group ID provided in the request body.
     """
     def has_permission(self, request, view):
-        # This is a bit tricky for list views unless we filter querysets.
-        # For object permission:
-        return True
+        # 1. Look for 'group' or 'group_id' in the POST/PUT body
+        group_id = request.data.get('group_id')
 
-    def has_object_permission(self, request, view, obj):
-        # If obj is ChurchGroup
-        if isinstance(obj, ChurchGroup):
-            return GroupMembership.objects.filter(user=request.user, group=obj).exists()
-        # If obj is related to a group (e.g. Post), implement logic to fetch group from obj
-        return False
+        # 2. If it's not in the body, maybe check the URL as a fallback?
+        
+
+        if not group_id:
+            return False
+
+        # 3. Perform the membership check
+        return GroupMembership.objects.filter(
+            user=request.user, 
+            group_id=group_id
+        ).exists()
+
 
 class IsGroupMaker(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):

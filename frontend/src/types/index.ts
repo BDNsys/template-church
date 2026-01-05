@@ -5,14 +5,26 @@ export interface GroupMembership {
     group_type?: 'LEADERSHIP' | 'FINANCE' | 'GENERAL' | 'TECH'; // Optional as it might not be in token directly unless added
 }
 
+// export interface User {
+//     id: number;
+//     username: string;
+//     email: string;
+//     is_staff: boolean;
+//     is_superuser: boolean;
+//     groups?: GroupMembership[];
+// }
+
 export interface User {
-    id: number;
     username: string;
     email: string;
+    phone_number: string | null;
+    is_approved_member: boolean;
+    is_global_auditor: boolean;
     is_staff: boolean;
     is_superuser: boolean;
-    groups?: GroupMembership[];
+    is_leadership: boolean;
 }
+
 
 export interface LoginCredentials {
     username: string;

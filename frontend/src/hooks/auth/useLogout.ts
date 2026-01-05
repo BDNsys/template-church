@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { clearTokens } from '../utils/token';
-import { useToast } from '../contexts/ToastContext';
-import { queryClient } from '../config/queryClient';
+import { clearTokens } from '../../utils/token';
+import { useToast } from '../../contexts/ToastContext';
+import { queryClient } from '../../config/queryClient';
 
 export const useLogout = () => {
     const navigate = useNavigate();

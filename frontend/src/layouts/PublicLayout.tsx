@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuthStatus';
-import { useLogout } from '../hooks/useLogout';
+import { useAuth } from '../hooks/auth/useAuthStatus';
+import { useLogout } from '../hooks/auth/useLogout';
 
 const PublicLayout: React.FC = () => {
     const isAuthorized = useAuth();

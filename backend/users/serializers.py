@@ -2,6 +2,8 @@ from django.conf import settings
 from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
+from api.models.groups_models import GroupMembership
+from api.permissions import IsGroupMaker, IsGroupAuditor, IsGroupMember
 
 
 User = get_user_model()
@@ -37,14 +39,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token["is_superuser"] = user.is_superuser
 
         # Add group memberships
-        memberships = GroupMembership.objects.filter(user=user)
-        groups_data = []
-        for membership in memberships:
-            groups_data.append({
-                "group_id": membership.group.id,
-                "group_name": membership.group.name,
-                "role": membership.role
-            })
-        token["groups"] = groups_data
 
         return token
+

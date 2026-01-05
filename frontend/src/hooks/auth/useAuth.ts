@@ -1,9 +1,22 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { loginUser, registerUser } from '../services/auth';
-import { setTokens } from '../utils/token';
-import { useToast } from '../contexts/ToastContext';
-import type { LoginCredentials, RegisterCredentials } from '../types';
+import { loginUser, registerUser } from '../../services/auth';
+import { setTokens } from '../../utils/token';
+import { useToast } from '../../contexts/ToastContext';
+import type { LoginCredentials, RegisterCredentials } from '../../types';
+
+
+/*
+  data = {
+        "username": user.username,
+        "email": user.email,
+        "phone_number": getattr(user, 'phone_number', None), # Safely get if field exists
+        "is_approved_member": getattr(user, 'is_approved_member', False),
+        "is_global_auditor": getattr(user, 'is_global_auditor', False),
+        "is_staff": user.is_staff,
+        "is_superuser": user.is_superuser,
+        "is_leadership": is_leadership
+    } */
 
 export const useLogin = () => {
     const navigate = useNavigate();
@@ -41,3 +54,4 @@ export const useRegister = () => {
         },
     });
 };
+

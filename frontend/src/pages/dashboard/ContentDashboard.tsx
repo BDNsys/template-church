@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { useCreateBlog, useUploadVideo, useUploadGalleryImage } from '../../hooks/useContent';
+import { useCreateBlog } from '../../hooks/blog/useBlog';
+import { useUploadVideo } from '../../hooks/video/useVideo';
+import { useUploadGalleryImage } from '../../hooks/gallery/useGallery';
 
 const ContentDashboard: React.FC = () => {
     const createBlog = useCreateBlog();

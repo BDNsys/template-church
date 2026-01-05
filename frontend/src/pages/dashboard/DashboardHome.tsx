@@ -1,8 +1,13 @@
+// frontend/src/pages/dashboard/DashboardHome.tsx
 import React from 'react';
 import { useGroups, useMembers, useFinanceRecords } from '../../hooks/useManagement';
-import { useBlogs, useVideos, useGallery } from '../../hooks/useContent';
+import { useBlogs } from '../../hooks/blog/useBlog';
+import { useVideos } from '../../hooks/video/useVideo';
+import { useGallery } from '../../hooks/gallery/useGallery';
+
 
 const DashboardHome: React.FC = () => {
+
     const { data: groups } = useGroups();
     const { data: members } = useMembers();
     const { data: finance } = useFinanceRecords();
@@ -30,6 +35,7 @@ const DashboardHome: React.FC = () => {
                         <div className="px-4 py-5 sm:p-6">
                             <dt className="text-sm font-medium text-gray-500 truncate">
                                 {item.name}
+
                             </dt>
                             <dd className="mt-1 text-3xl font-semibold text-gray-900">
                                 {item.value}

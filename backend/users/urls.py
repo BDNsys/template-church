@@ -15,4 +15,6 @@ urlpatterns = [
     path('auth/registration/', include('dj_rest_auth.registration.urls')),
 
     path('auth/google/callback/success/', views.google_callback, name='google_auth_success'),
+
+    path('user-info/', views.get_user_info, name='user-info'),
 ]

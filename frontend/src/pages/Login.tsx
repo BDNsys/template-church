@@ -4,7 +4,7 @@ import AuthLayout from '../components/layout/AuthLayout';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import GoogleLoginButton from '../components/ui/GoogleLoginButton';
-import { useLogin } from '../hooks/useAuth';
+import { useLogin } from '../hooks/auth/useAuth';
 import { validateUsername, validatePassword } from '../utils/validation';
 
 const Login: React.FC = () => {

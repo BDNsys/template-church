@@ -1,10 +1,12 @@
+// frontend/src/layouts/DashboardLayout.tsx
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { useUser } from '../hooks/useUser';
-import { useLogout } from '../hooks/useLogout';
+import { useUser } from '../hooks/auth/useUser';
+import { useLogout } from '../hooks/auth/useLogout';
 
 const DashboardLayout: React.FC = () => {
     const { data: user } = useUser();
+
     const logout = useLogout();
     const location = useLocation();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -18,9 +20,9 @@ const DashboardLayout: React.FC = () => {
     };
 
     // Determine user roles for sidebar links
-    const isLeadership = user?.groups?.some(g => g.group_name === 'Leadership' || user?.is_superuser);
-    const isFinance = user?.groups?.some(g => g.group_name === 'Finance' || user?.is_superuser);
-    const isMaker = user?.groups?.some(g => g.role === 'MAKER') || user?.is_superuser;
+    const isLeadership = user?.is_leadership;
+    // const isFinance = user?.is_finance;
+    // const isMaker = user?.is_maker;
 
     const getPageTitle = () => {
         const pathSegments = location.pathname.split('/');
@@ -34,7 +36,7 @@ const DashboardLayout: React.FC = () => {
             {/* Sidebar */}
             <div className={`fixed inset-y-0 left-0 z-30 w-64 bg-indigo-700 transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
                 <div className="flex items-center justify-center h-16 bg-indigo-800 shadow-md">
-                    <span className="text-white text-xl font-bold tracking-wide">Church Admin</span>
+                    <span className="text-white text-xl font-bold tracking-wide">Church Admin </span>
                 </div>
                 <nav className="mt-5 px-2 space-y-1">
                     <Link to="/dashboard" className={`${isActive('/dashboard')} group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors`}>
@@ -44,7 +46,7 @@ const DashboardLayout: React.FC = () => {
                         Dashboard
                     </Link>
 
-                    {isLeadership && (
+                    {(isLeadership || user?.is_superuser) && (
                         <>
                             <Link to="/dashboard/groups" className={`${isActive('/dashboard/groups')} group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors`}>
                                 <svg className="mr-3 h-6 w-6 text-indigo-300 group-hover:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -61,7 +63,7 @@ const DashboardLayout: React.FC = () => {
                         </>
                     )}
 
-                    {isFinance && (
+                    {user?.is_superuser && (
                         <Link to="/dashboard/finance" className={`${isActive('/dashboard/finance')} group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors`}>
                             <svg className="mr-3 h-6 w-6 text-indigo-300 group-hover:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -70,7 +72,7 @@ const DashboardLayout: React.FC = () => {
                         </Link>
                     )}
 
-                    {(isMaker || isLeadership) && (
+                    {(user?.is_superuser || isLeadership) && (
                         <Link to="/dashboard/content" className={`${isActive('/dashboard/content')} group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors`}>
                             <svg className="mr-3 h-6 w-6 text-indigo-300 group-hover:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />

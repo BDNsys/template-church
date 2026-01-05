@@ -1,10 +1,9 @@
 import React from 'react';
-import { useBlogs } from '../../hooks/useContent';
+import { useBlogs } from '../../hooks/blog/useBlog';
 import { Link } from 'react-router-dom';
 
 const Blogs: React.FC = () => {
     const { data: blogs, isLoading, error } = useBlogs();
-
     if (isLoading) return <div className="text-center py-10">Loading blogs...</div>;
     if (error) return <div className="text-center py-10 text-red-500">Error loading blogs</div>;
 

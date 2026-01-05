@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGallery } from '../../hooks/useContent';
+import { useGallery } from '../../hooks/gallery/useGallery';
 
 const Gallery: React.FC = () => {
     const { data: images, isLoading, error } = useGallery();

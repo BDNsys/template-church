@@ -3,6 +3,10 @@ from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from api.models.groups_models import GroupMembership
 User = get_user_model()
 
 class CreateUserView(generics.CreateAPIView):
@@ -40,3 +44,33 @@ def google_callback(request):
         f"?access={str(refresh.access_token)}"
         f"&refresh={str(refresh)}"
     )
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_info(request):
+    """
+    Returns information about the currently authenticated user.
+    Requires a valid Token or JWT in the Authorization header.
+    """
+    user = request.user
+
+    # Check leadership status directly using the setting
+    # This replaces the manual 'has_permission' call
+    is_leadership = GroupMembership.objects.filter(
+        user=user.id, 
+        group_id=settings.LEADERSHIP_GROUP_ID
+    ).exists()
+
+    data = {
+        "username": user.username,
+        "email": user.email,
+        "phone_number": getattr(user, 'phone_number', None), # Safely get if field exists
+        "is_approved_member": getattr(user, 'is_approved_member', False),
+        "is_global_auditor": getattr(user, 'is_global_auditor', False),
+        "is_staff": user.is_staff,
+        "is_superuser": user.is_superuser,
+        "is_leadership": is_leadership
+    }
+
+    return Response(data)
