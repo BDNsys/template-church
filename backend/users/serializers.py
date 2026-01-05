@@ -8,10 +8,18 @@ from api.permissions import IsGroupMaker, IsGroupAuditor, IsGroupMember
 
 User = get_user_model()
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "username", "password", "phone_number", "is_approved_member", "is_global_auditor"]
+        fields = [
+            "id",
+            "username",
+            "password",
+            "phone_number",
+            "is_approved_member",
+            "is_global_auditor",
+        ]
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
@@ -19,10 +27,9 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-
-
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from api.models.groups_models import GroupMembership
+
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -41,4 +48,3 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add group memberships
 
         return token
-

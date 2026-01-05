@@ -15,18 +15,18 @@ from datetime import timedelta
 import os
 from dotenv import load_dotenv
 
-load_dotenv() 
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-BASE_DIR_PARENT=Path(__file__).resolve().parent.parent.parent
+BASE_DIR_PARENT = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-c5bxxf-j42^cc5so^wa7-pt#ip!=sm6hyhz&wrjxb3zw$2pnh2'
+SECRET_KEY = "django-insecure-c5bxxf-j42^cc5so^wa7-pt#ip!=sm6hyhz&wrjxb3zw$2pnh2"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -43,75 +43,69 @@ CORS_ALLOW_ALL_ORIGINS = True
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'corsheaders',
-    
-    'rest_framework',
-    'rest_framework.authtoken',
-    
-    
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
-    
-    
-    'api',
-    'users',
-    'drf_spectacular',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "corsheaders",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
+    "api",
+    "users",
+    "drf_spectacular",
 ]
 
 
-AUTH_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = "users.CustomUser"
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware'
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
-ROOT_URLCONF = 'backend.urls'
+ROOT_URLCONF = "backend.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'backend.wsgi.application'
+WSGI_APPLICATION = "backend.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
@@ -121,16 +115,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -138,9 +132,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -150,153 +144,134 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT =BASE_DIR_PARENT / 'staticfiles'
-STATICFILES_DIRS=[
-    BASE_DIR_PARENT / 'frontend'/'build'/ 'static'
-]
-TEMPLATES[0]['DIRS']=[
-    BASE_DIR_PARENT /'frontend'/ 'build'
-]
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR_PARENT / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR_PARENT / "frontend" / "build" / "static"]
+TEMPLATES[0]["DIRS"] = [BASE_DIR_PARENT / "frontend" / "build"]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 # DRF CONFIG
 REST_FRAMEWORK = {
-   
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle',
-        'rest_framework.throttling.ScopedRateThrottle',
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+        "rest_framework.throttling.ScopedRateThrottle",
     ],
-    'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/day',
-        'user': '1000/day',
-        'comments': '10/minute',
-        'contacts': '5/hour',
-        'subscribers': '5/hour',
-    }
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "100/day",
+        "user": "1000/day",
+        "comments": "10/minute",
+        "contacts": "5/hour",
+        "subscribers": "5/hour",
+    },
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Church API',
-    'DESCRIPTION': 'API for Church Management System',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
+    "TITLE": "Church API",
+    "DESCRIPTION": "API for Church Management System",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
-SECRET_JWT_KEY=os.getenv('SECRET_KEY')
-APP_NAME=os.getenv('APP_NAME')
+SECRET_JWT_KEY = os.getenv("SECRET_KEY")
+APP_NAME = os.getenv("APP_NAME")
 
 
 SIMPLE_JWT = {
     # 🔐 Token lifetimes
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),        # Access token valid for 1 week
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),      # Refresh token valid for 30 days
-
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),  # Access token valid for 1 week
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),  # Refresh token valid for 30 days
     # 🔁 Refresh token rotation (VERY IMPORTANT)
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
-
     # 👤 User tracking
     "UPDATE_LAST_LOGIN": True,
-
     # 🔑 Signing & verification
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_JWT_KEY,
     "VERIFYING_KEY": None,
-
     # 🔍 JWT claims
     "AUDIENCE": None,
-    "ISSUER": APP_NAME,        
-    "LEEWAY": 30,                    
-
+    "ISSUER": APP_NAME,
+    "LEEWAY": 30,
     # 📦 Authorization header
     "AUTH_HEADER_TYPES": ("Bearer",),
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
-
     # 👥 User identification
     "USER_ID_FIELD": "id",
     "USER_ID_CLAIM": "user_id",
- 
-
     # 🔐 Authentication behavior
     "USER_AUTHENTICATION_RULE": (
         "rest_framework_simplejwt.authentication.default_user_authentication_rule"
     ),
-
     # 🎟 Token classes
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
     "TOKEN_TYPE_CLAIM": "token_type",
-
-    "TOKEN_OBTAIN_SERIALIZER":
-        "users.serializers.CustomTokenObtainPairSerializer",
-
+    "TOKEN_OBTAIN_SERIALIZER": "users.serializers.CustomTokenObtainPairSerializer",
     # 🆔 Token identifiers
     "JTI_CLAIM": "jti",
-
     # 🚫 Token revocation (password change invalidates tokens)
     "CHECK_REVOKE_TOKEN": True,
     "REVOKE_TOKEN_CLAIM": "hash_password",
-
     # ✅ Only allow active users
     "CHECK_USER_IS_ACTIVE": True,
 }
 
 
-#all auth config
+# all auth config
 
 
 SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 )
-SOCIAL_AUTH_GOOGLE_CLIENT_ID=os.getenv("SOCIAL_AUTH_GOOGLE_CLIENT_ID", default="")
-SOCIAL_AUTH_GOOGLE_CLIENT_SECRET=os.getenv("SOCIAL_AUTH_GOOGLE_CLIENT_SECRET", default="")
+SOCIAL_AUTH_GOOGLE_CLIENT_ID = os.getenv("SOCIAL_AUTH_GOOGLE_CLIENT_ID", default="")
+SOCIAL_AUTH_GOOGLE_CLIENT_SECRET = os.getenv(
+    "SOCIAL_AUTH_GOOGLE_CLIENT_SECRET", default=""
+)
 SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
         ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-            'prompt': 'select_account',
+        "AUTH_PARAMS": {
+            "access_type": "online",
+            "prompt": "select_account",
         },
-        'OAUTH_PKCE_ENABLED': True,
-        'APP': {
-            'client_id':SOCIAL_AUTH_GOOGLE_CLIENT_ID,
-            'secret': SOCIAL_AUTH_GOOGLE_CLIENT_SECRET,
-            'key': ''
-        }
+        "OAUTH_PKCE_ENABLED": True,
+        "APP": {
+            "client_id": SOCIAL_AUTH_GOOGLE_CLIENT_ID,
+            "secret": SOCIAL_AUTH_GOOGLE_CLIENT_SECRET,
+            "key": "",
+        },
     }
 }
 
 # Allauth settings
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 
 # Redirect to this URL after successful login
-LOGIN_REDIRECT_URL = '/api/users/auth/google/callback/success/'
+LOGIN_REDIRECT_URL = "/api/users/auth/google/callback/success/"
 
 # Skip the intermediate "You are about to sign in..." page
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
 
-
-#ENV VARIABLES 
-FRONTEND_BASE_URL=os.getenv("FRONTEND_BASE_URL", default="http://localhost:8000")
-LEADERSHIP_GROUP_ID=os.getenv("LEADERSHIP_GROUP_ID", default="")
+# ENV VARIABLES
+FRONTEND_BASE_URL = os.getenv("FRONTEND_BASE_URL", default="http://localhost:8000")
+LEADERSHIP_GROUP_ID = os.getenv("LEADERSHIP_GROUP_ID", default="")

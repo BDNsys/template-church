@@ -5,12 +5,13 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from api.models.gallery_model import Gallery
 from api.serializers.gallery_serializers import GallerySerializer
 
+
 class GalleryViewSet(viewsets.ModelViewSet):
     queryset = Gallery.objects.all()
     serializer_class = GallerySerializer
     parser_classes = (MultiPartParser, FormParser)
 
-    @action(detail=False, methods=['post'], url_path='upload')
+    @action(detail=False, methods=["post"], url_path="upload")
     def upload_image(self, request):
         serializer = GallerySerializer(data=request.data)
         if serializer.is_valid():

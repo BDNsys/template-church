@@ -1,0 +1,6 @@
+{
+  "python.linting.enabled": false,
+  "editor.formatOnSave": true,
+  "ruff.lint.run": "onSave",
+  "ruff.format.run": "onSave"
+}

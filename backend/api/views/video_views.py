@@ -5,12 +5,13 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from api.models.video_model import Video
 from api.serializers.video_serializers import VideoSerializer
 
+
 class VideoViewSet(viewsets.ModelViewSet):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
     parser_classes = (MultiPartParser, FormParser)
 
-    @action(detail=False, methods=['post'], url_path='upload')
+    @action(detail=False, methods=["post"], url_path="upload")
     def upload_video(self, request):
         serializer = VideoSerializer(data=request.data)
         if serializer.is_valid():

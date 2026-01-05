@@ -8,3 +8,36 @@ dependencies = [
     "dotenv>=0.9.9",
     "drf-spectacular>=0.29.0",
 ]
+
+
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+exclude = [
+    "migrations",
+    "venv",
+    ".venv",
+    "static",
+    "media",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "W",   # pycodestyle warnings
+    "I",   # isort (import sorting)
+    "DJ",  # django-specific rules
+]
+ignore = [
+    "DJ001", # Allow null=True on CharField/TextField if you want
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["template-church"]
+
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
