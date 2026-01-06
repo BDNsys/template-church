@@ -19,35 +19,17 @@ class GroupMembershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupMembership
         fields = "__all__"
-        read_only_fields = ("user", "group")
+        read_only_fields = ("user",)
 
-
-class AddUserToGroupSerializer(serializers.Serializer):
-    group_id = serializers.IntegerField(required=False, write_only=True)
-    role = serializers.CharField(required=False, write_only=True)
-
-    def validate(self, data):
-        group_id = data.get("group_id")
-        role = data.get("role")
-
-        if not group_id:
-            raise serializers.ValidationError("group_id must be provided.")
-
-        try:
-            if group_id:
-                data["group"] = ChurchGroup.objects.get(id=group_id)
-            if role:
-                data["role"] = role
-        except ChurchGroup.DoesNotExist:
-            raise serializers.ValidationError("Church group not found.")
-
-        return data
-
-    def create(self, validated_data):
+    def create(self, data):
         user = self.context["request"].user
-        group = validated_data["group"]
-        role = validated_data["role"]
+        role = data["role"]
         membership, _ = GroupMembership.objects.get_or_create(
-            user=user, group=group, role=role
+            user=user,
+            group=data.get("group"),
+            role=role,
+            can_manage_blog=data.get("can_manage_blog", False),
+            can_manage_gallery=data.get("can_manage_gallery", False),
+            can_manage_videos=data.get("can_manage_videos", False),
         )
         return membership

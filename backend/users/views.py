@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from api.models.groups_models import GroupMembership
+from api.models.groups_models import GroupMembership, ChurchGroup
 
 User = get_user_model()
 
@@ -60,23 +60,78 @@ def get_user_info(request):
     """
     user = request.user
 
-    # Check leadership status directly using the setting
-    # This replaces the manual 'has_permission' call
-    is_leadership = GroupMembership.objects.filter(
-        user=user.id, group_id=settings.LEADERSHIP_GROUP_ID
-    ).exists()
+    try:
+        # Check leadership status directly using the setting
+        is_leadership = GroupMembership.objects.filter(
+            user=user, group_id=settings.LEADERSHIP_GROUP_ID
+        ).exists()
 
-    data = {
-        "username": user.username,
-        "email": user.email,
-        "phone_number": getattr(
-            user, "phone_number", None
-        ),  # Safely get if field exists
-        "is_approved_member": getattr(user, "is_approved_member", False),
-        "is_global_auditor": getattr(user, "is_global_auditor", False),
-        "is_staff": user.is_staff,
-        "is_superuser": user.is_superuser,
-        "is_leadership": is_leadership,
-    }
+        # Initialize finance-related variables
+        is_finance_member = False
+        is_finance_maker = False
+        is_finance_approver = False
+        is_finance_auditor = False
 
-    return Response(data)
+        try:
+            finance_group = ChurchGroup.objects.get(group_type="FINANCE")
+            finance_member = GroupMembership.objects.filter(
+                user=user, group=finance_group
+            )
+            is_finance_member = finance_member.exists()
+            is_finance_maker = finance_member.filter(role="MAKER").exists()
+            is_finance_approver = finance_member.filter(role="APPROVER").exists()
+            is_finance_auditor = finance_member.filter(role="AUDITOR").exists()
+        except ChurchGroup.DoesNotExist:
+            pass  # Finance group doesn't exist, keep defaults as False
+
+        permissions = {
+            "can_manage_blog": [],
+            "can_manage_gallery": [],
+            "can_manage_videos": [],
+        }
+
+        groups = {}
+        users_groups = GroupMembership.objects.filter(user=user)
+
+        for membership in users_groups:
+            if membership.can_manage_blog:
+                permissions["can_manage_blog"].append(membership.group.name)
+            if membership.can_manage_gallery:
+                permissions["can_manage_gallery"].append(membership.group.name)
+            if membership.can_manage_videos:
+                permissions["can_manage_videos"].append(membership.group.name)
+
+            groups[membership.group.name] = {
+                "id": membership.group.id,
+                "name": membership.group.name,
+                "role": membership.role,
+            }
+
+        data = {
+            "username": user.username,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "phone_number": getattr(user, "phone_number", None),
+            "is_approved_member": getattr(user, "is_approved_member", False),
+            "is_global_auditor": getattr(user, "is_global_auditor", False),
+            "is_staff": user.is_staff,
+            "is_superuser": user.is_superuser,
+            "is_leadership": is_leadership,
+            "is_finance_member": is_finance_member,
+            "is_finance_maker": is_finance_maker,
+            "is_finance_approver": is_finance_approver,
+            "is_finance_auditor": is_finance_auditor,
+            "groups": groups,
+            "permissions": permissions,
+        }
+
+        return Response(data)  # ✅ Return Response object with data
+
+    except Exception as e:
+        # Log the error for debugging
+        print(f"Error in get_user_info: {str(e)}")
+        # Return a proper error response
+        return Response(
+            {"error": "An error occurred while fetching user information"}, status=500
+        )

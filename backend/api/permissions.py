@@ -102,3 +102,10 @@ class IsTechAuditor(permissions.BasePermission):
         return GroupMembership.objects.filter(
             user=request.user, group__group_type="TECH", role="AUDITOR"
         ).exists()
+
+
+class CanManageBlog(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return GroupMembership.objects.filter(
+            user=request.user, can_manage_blog=True
+        ).exists

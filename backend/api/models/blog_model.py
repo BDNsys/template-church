@@ -45,6 +45,4 @@ class BlogSection(models.Model):
     text = models.TextField()
 
     create_at = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(
-        upload_to="blog_images/", default="placeholder.png", null=True, blank=True
-    )
+    image_url = models.URLField(max_length=500, null=True, blank=True)

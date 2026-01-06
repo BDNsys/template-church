@@ -11,7 +11,7 @@ from api.views.membership_views import (
     MembershipRequestViewSet,
 )
 from api.views.finance_record_views import FinanceRecordViewSet
-from api.views.blog_views import BlogViewSet
+from api.views.blog_views import BlogViewSet, BlogSectionViewSet
 from api.views.video_views import VideoViewSet
 from api.views.gallery_views import GalleryViewSet
 from api.views.interaction_views import (
@@ -29,6 +29,7 @@ router.register(r"group-memberships", GroupMembershipViewSet)
 router.register(r"finance", FinanceRecordViewSet)
 
 router.register(r"blogs", BlogViewSet)
+router.register(r"blogsection", BlogSectionViewSet)
 router.register(r"videos", VideoViewSet)
 router.register(r"gallery", GalleryViewSet)
 router.register(r"comments", CommentViewSet)
