@@ -10,15 +10,21 @@ from api.views.membership_views import (
     MemberViewSet,
     MembershipRequestViewSet,
 )
-from api.views.finance_record_views import FinanceRecordViewSet
-from api.views.blog_views import BlogViewSet, BlogSectionViewSet
-from api.views.video_views import VideoViewSet
-from api.views.gallery_views import GalleryViewSet
-from api.views.interaction_views import (
-    CommentViewSet,
-    ContactViewSet,
-    SubscriberViewSet,
-)
+
+from api.views import (FinanceRecordViewSet,
+                       BlogViewSet, 
+                       BlogSectionViewSet,
+                       VideoViewSet,
+                       GalleryViewSet,
+                       CommentViewSet,
+                       ContactViewSet,
+                       SubscriberViewSet,
+                       ImageUploadView)
+ 
+
+  
+
+
 
 
 router = DefaultRouter()
@@ -30,6 +36,7 @@ router.register(r"finance", FinanceRecordViewSet)
 
 router.register(r"blogs", BlogViewSet)
 router.register(r"blogsection", BlogSectionViewSet)
+
 router.register(r"videos", VideoViewSet)
 router.register(r"gallery", GalleryViewSet)
 router.register(r"comments", CommentViewSet)
@@ -48,4 +55,5 @@ urlpatterns = [
     path(
         "schema/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"
     ),
+    # path( "image-upload",ImageUploadView.as_view(),name="image-upload")
 ]

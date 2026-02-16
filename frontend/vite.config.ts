@@ -3,10 +3,10 @@ import react from '@vitejs/plugin-react'
 
 
 export default defineConfig({
-plugins: [react()],
-build: {
-outDir: 'build', // Django expects this
-emptyOutDir: true,
-},
-base: '/', // important for Django routing
+    plugins: [react()],
+    build: {
+        outDir: '../public_html',
+        emptyOutDir: true,
+    },
+    base: '/', // important for Django routing
 })

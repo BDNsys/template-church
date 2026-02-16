@@ -17,7 +17,7 @@ class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = "__all__"
-        read_only_fields = ("author", "likes")
+        read_only_fields = ("author", "likes","published_at")
     def validate(self, attrs):
         """
         Validate that the author can only assign groups they are a member of.
@@ -78,3 +78,4 @@ class BlogSerializer(serializers.ModelSerializer):
         validated_data['author'] = user
         
         return super().create(validated_data)
+

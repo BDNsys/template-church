@@ -106,6 +106,10 @@ class IsTechAuditor(permissions.BasePermission):
 
 class CanManageBlog(permissions.BasePermission):
     def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        
         return GroupMembership.objects.filter(
             user=request.user, can_manage_blog=True
         ).exists

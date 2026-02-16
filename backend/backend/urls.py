@@ -26,12 +26,12 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/users/", include("users.urls")),
     path("api/", include("api.urls")),
-    # Serve static assets from the build directory
+    # Serve static assets from the public_html directory
     re_path(
         r"^assets/(?P<path>.*)$",
         serve,
         {
-            "document_root": settings.BASE_DIR.parent / "frontend" / "build" / "assets",
+            "document_root": settings.BASE_DIR_PARENT / "public_html" / "assets",
         },
     ),
     # Serve vite.svg and other root-level static files
@@ -39,9 +39,12 @@ urlpatterns = [
         r"^(?P<path>.*\.(svg|png|jpg|jpeg|gif|ico|json|txt))$",
         serve,
         {
-            "document_root": settings.BASE_DIR.parent / "frontend" / "build",
+            "document_root": settings.BASE_DIR_PARENT / "public_html",
         },
     ),
     # React SPA fallback - must be last
     re_path(r"^.*$", TemplateView.as_view(template_name="index.html")),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
