@@ -17,5 +17,6 @@ urlpatterns = [
         views.google_callback,
         name="google_auth_success",
     ),
+    path("auth/google/verify/", views.GoogleLogin.as_view(), name="google_verify"),
     path("user-info/", views.get_user_info, name="user-info"),
 ]

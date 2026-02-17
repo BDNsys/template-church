@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { setTokens } from '../utils/token';
+import { verifyGoogleLogin } from '../services/auth';
 import { useToast } from '../contexts/ToastContext';
 import Spinner from '../components/ui/Spinner';
 
@@ -10,16 +11,47 @@ const GoogleCallback: React.FC = () => {
     const { addToast } = useToast();
 
     useEffect(() => {
-        const access = searchParams.get('access');
-        const refresh = searchParams.get('refresh');
+        const code = searchParams.get('code');
+        const verifier = sessionStorage.getItem('code_verifier');
 
-        if (access && refresh) {
-            setTokens(access, refresh);
-            addToast('Login successful! Welcome back.', 'success');
-            navigate('/');
+        console.log('GoogleCallback mounted');
+        console.log('Code from URL:', code ? 'Present' : 'Missing');
+        console.log('Verifier from storage:', verifier ? 'Present' : 'Missing');
+
+        if (code && verifier) {
+            console.log('Initiating backend verification...');
+            const handleLogin = async () => {
+                try {
+                    console.log('Calling verifyGoogleLogin...');
+                    const tokens = await verifyGoogleLogin(code, verifier);
+                    console.log('tokens received', tokens);
+                    // verifyGoogleLogin now returns { access, refresh } with consistent naming
+                    setTokens(tokens.access, tokens.refresh);
+                    addToast('Login successful! Welcome back.', 'success');
+                    sessionStorage.removeItem('code_verifier');
+                    navigate('/');
+                } catch (error) {
+                    addToast('Google login failed. Authentication error.', 'error');
+                    navigate('/login');
+                }
+            };
+            handleLogin();
         } else {
-            addToast('Google login failed. No tokens received.', 'error');
-            navigate('/login');
+            // ... (rest of the logic remains similar but cleaner)
+            const access = searchParams.get('access');
+            const refresh = searchParams.get('refresh');
+
+            if (access && refresh) {
+                setTokens(access, refresh);
+                addToast('Login successful! Welcome back.', 'success');
+                navigate('/');
+            } else if (code && !verifier) {
+                addToast('Authentication session expired. Please try again.', 'error');
+                navigate('/login');
+            } else {
+                addToast('Google login failed. No tokens received.', 'error');
+                navigate('/login');
+            }
         }
     }, [searchParams, navigate, addToast]);
 

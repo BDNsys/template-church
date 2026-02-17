@@ -30,7 +30,7 @@ export const useGroups = () => {
     return useQuery<ChurchGroup[]>({
         queryKey: ['groups'],
         queryFn: async () => {
-            const { data } = await api.get('/api/groups/');
+            const { data } = await api.get('/groups/');
             return data;
         },
     });
@@ -40,7 +40,7 @@ export const useMembers = () => {
     return useQuery<Member[]>({
         queryKey: ['members'],
         queryFn: async () => {
-            const { data } = await api.get('/api/group-memberships/');
+            const { data } = await api.get('/group-memberships/');
             return data;
         },
     });
@@ -50,7 +50,7 @@ export const useFinanceRecords = () => {
     return useQuery<FinanceRecord[]>({
         queryKey: ['finance'],
         queryFn: async () => {
-            const { data } = await api.get('/api/finance/');
+            const { data } = await api.get('/finance/');
             return data;
         },
     });
@@ -61,7 +61,7 @@ export const useCreateGroup = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (newGroup: Partial<ChurchGroup>) => {
-            const { data } = await api.post('/api/groups/', newGroup);
+            const { data } = await api.post('/groups/', newGroup);
             return data;
         },
         onSuccess: () => {
@@ -74,7 +74,7 @@ export const useAddMember = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (newMember: Partial<Member>) => {
-            const { data } = await api.post('/api/group-memberships/', newMember);
+            const { data } = await api.post('/group-memberships/', newMember);
             return data;
         },
         onSuccess: () => {
@@ -87,7 +87,7 @@ export const useCreateFinanceRecord = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (newRecord: Partial<FinanceRecord>) => {
-            const { data } = await api.post('/api/finance/', newRecord);
+            const { data } = await api.post('/finance/', newRecord);
             return data;
         },
         onSuccess: () => {

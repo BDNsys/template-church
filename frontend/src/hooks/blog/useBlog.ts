@@ -26,7 +26,7 @@ export const useBlogs = () => {
     return useQuery<Blog[]>({
         queryKey: ['blogs'],
         queryFn: async () => {
-            const { data } = await api.get('/api/blogs/');
+            const { data } = await api.get('/blogs/');
             return data;
         },
     });
@@ -35,7 +35,7 @@ export const useBlog = (id: string) => {
     return useQuery<Blog>({
         queryKey: ['blogs', id],
         queryFn: async () => {
-            const { data } = await api.get(`/api/blogs/${id}/`);
+            const { data } = await api.get(`/blogs/${id}/`);
             return data;
         },
         enabled: !!id,
@@ -47,7 +47,7 @@ export const useCreateBlog = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (newBlog: Partial<Blog>) => {
-            const { data } = await api.post('/api/blogs/', newBlog);
+            const { data } = await api.post('/blogs/', newBlog);
             return data;
         },
         onSuccess: () => {
@@ -59,7 +59,7 @@ export const useCreateBlog = () => {
 export const useUploadBlogImage = () => {
     return useMutation({
         mutationFn: async ({ blogId, formData }: { blogId: number; formData: FormData }) => {
-            const { data } = await api.post(`/api/blogs/${blogId}/upload_image/`, formData, {
+            const { data } = await api.post(`/blogs/${blogId}/upload_image/`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             return data;

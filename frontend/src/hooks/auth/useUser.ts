@@ -9,7 +9,7 @@ import api from '../../api';
 //         queryKey: ['user'],
 //         queryFn: () => {
 //             // Get user from token
-//             // In a production app, you might want to fetch from /api/users/me/
+//             // In a production app, you might want to fetch from /users/me/
 //             // const userData = getUserFromToken();
 //             const userData=useGetUserInfo();
 //             if (!userData) return null;
@@ -27,7 +27,7 @@ export const useUser = () => {
     return useQuery<User>({
         queryKey: ['user-info'],
         queryFn: async () => {
-            const { data } = await api.get('/api/users/user-info/');
+            const { data } = await api.get('/users/user-info/');
             return data;
         },
     });

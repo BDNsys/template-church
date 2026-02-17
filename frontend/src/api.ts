@@ -2,7 +2,10 @@ import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import { getAccessToken, getRefreshToken, setTokens, clearTokens } from './utils/token';
 import type { AuthTokens } from './types';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL =
+    import.meta.env.VITE_API_URL ||
+    import.meta.env.VITE_API_BASE_URL ||
+    'http://localhost:8000';
 
 // Create axios instance
 const api = axios.create({
@@ -79,7 +82,7 @@ api.interceptors.response.use(
 
             try {
                 const response = await axios.post<AuthTokens>(
-                    `${API_BASE_URL}/api/users/token/refresh/`,
+                    `${API_BASE_URL}/users/token/refresh/`,
                     { refresh: refreshToken }
                 );
 

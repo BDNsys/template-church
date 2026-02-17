@@ -21,7 +21,7 @@ export const useGallery = () => {
     return useQuery<GalleryImage[]>({
         queryKey: ['gallery'],
         queryFn: async () => {
-            const { data } = await api.get('/api/gallery/');
+            const { data } = await api.get('/gallery/');
             return data;
         },
     });
@@ -36,7 +36,7 @@ export const useUploadGalleryImage = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (formData: FormData) => {
-            const { data } = await api.post('/api/gallery/upload/', formData, {
+            const { data } = await api.post('/gallery/upload/', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             return data;

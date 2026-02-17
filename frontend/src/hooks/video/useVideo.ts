@@ -15,7 +15,7 @@ export const useVideos = () => {
     return useQuery<Video[]>({
         queryKey: ['videos'],
         queryFn: async () => {
-            const { data } = await api.get('/api/videos/');
+            const { data } = await api.get('/videos/');
             return data;
         },
     });
@@ -25,7 +25,7 @@ export const useUploadVideo = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (formData: FormData) => {
-            const { data } = await api.post('/api/videos/upload/', formData, {
+            const { data } = await api.post('/videos/upload/', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             return data;

@@ -17,7 +17,7 @@ const Contact: React.FC = () => {
         e.preventDefault();
         setStatus('submitting');
         try {
-            await api.post('/api/contacts/', formData);
+            await api.post('/contacts/', formData);
             setStatus('success');
             setFormData({ name: '', email: '', message: '' });
         } catch (error) {

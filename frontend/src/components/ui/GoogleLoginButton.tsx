@@ -1,4 +1,5 @@
 import React from 'react';
+import { generateCodeVerifier, generateCodeChallenge } from '../../utils/pkce';
 import './GoogleLoginButton.css';
 
 interface GoogleLoginButtonProps {
@@ -10,9 +11,27 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
     fullWidth = false,
     size = 'md'
 }) => {
-    const handleGoogleLogin = () => {
-        // Redirect to Django backend Google OAuth endpoint
-        window.location.href = 'http://localhost:8000/api/users/auth/google/login/';
+    const handleGoogleLogin = async () => {
+        const clientId = import.meta.env.VITE_SOCIAL_AUTH_GOOGLE_CLIENT_ID;
+        const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URL || `${window.location.origin}/auth/callback`;
+
+        const verifier = generateCodeVerifier();
+        sessionStorage.setItem('code_verifier', verifier);
+
+        const challenge = await generateCodeChallenge(verifier);
+
+        const params = new URLSearchParams({
+            client_id: clientId,
+            redirect_uri: redirectUri,
+            response_type: 'code',
+            scope: 'openid profile email',
+            code_challenge: challenge,
+            code_challenge_method: 'S256',
+            access_type: 'offline',
+            prompt: 'select_account'
+        });
+
+        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
     };
 
     return (

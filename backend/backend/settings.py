@@ -178,6 +178,10 @@ REST_FRAMEWORK = {
     },
 }
 
+REST_USE_JWT = True
+# Configure dj-rest-auth to use the custom serializer if needed
+# JWT_AUTH_TOKEN_CLASSES = ('rest_framework_simplejwt.tokens.AccessToken',)
+
 SPECTACULAR_SETTINGS = {
     "TITLE": "Church API",
     "DESCRIPTION": "API for Church Management System",
@@ -243,6 +247,9 @@ SOCIAL_AUTH_GOOGLE_CLIENT_ID = os.getenv("SOCIAL_AUTH_GOOGLE_CLIENT_ID", default
 SOCIAL_AUTH_GOOGLE_CLIENT_SECRET = os.getenv(
     "SOCIAL_AUTH_GOOGLE_CLIENT_SECRET", default=""
 )
+GOOGLE_REDIRECT_URI = os.getenv(
+    "GOOGLE_REDIRECT_URI", default="http://localhost:5173/auth/callback"
+)
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "SCOPE": [
@@ -276,5 +283,7 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 
 
 # ENV VARIABLES
-FRONTEND_BASE_URL = os.getenv("FRONTEND_BASE_URL", default="http://localhost:8000")
+FRONTEND_BASE_URL = os.getenv(
+    "FRONTEND_BASE_URL", os.getenv("FRONT_END_BASE", default="http://localhost:5173")
+)
 LEADERSHIP_GROUP_ID = os.getenv("LEADERSHIP_GROUP_ID", default="")

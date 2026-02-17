@@ -1,12 +1,15 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.utils.text import slugify
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from api.models.groups_models import GroupMembership, ChurchGroup
+import requests
 
 User = get_user_model()
 
@@ -27,6 +30,103 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 from django.shortcuts import redirect
 from rest_framework_simplejwt.tokens import RefreshToken
+class GoogleLogin(APIView):
+    permission_classes = [AllowAny]
+
+    @staticmethod
+    def _unique_username(email: str) -> str:
+        base = slugify(email.split("@")[0]) or "google-user"
+        username = base
+        index = 1
+        while User.objects.filter(username=username).exists():
+            index += 1
+            username = f"{base}-{index}"
+        return username
+
+    def post(self, request, *args, **kwargs):
+        code = request.data.get("code")
+        code_verifier = request.data.get("code_verifier")
+        redirect_uri = request.data.get("redirect_uri") or settings.GOOGLE_REDIRECT_URI
+
+        if not code or not code_verifier:
+            return Response(
+                {"detail": "Both 'code' and 'code_verifier' are required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        token_payload = {
+            "code": code,
+            "client_id": settings.SOCIAL_AUTH_GOOGLE_CLIENT_ID,
+            "client_secret": settings.SOCIAL_AUTH_GOOGLE_CLIENT_SECRET,
+            "redirect_uri": redirect_uri,
+            "grant_type": "authorization_code",
+            "code_verifier": code_verifier,
+        }
+
+        try:
+            token_response = requests.post(
+                "https://oauth2.googleapis.com/token",
+                data=token_payload,
+                timeout=10,
+            )
+            token_response.raise_for_status()
+            google_tokens = token_response.json()
+        except requests.RequestException:
+            return Response(
+                {"detail": "Failed to exchange authorization code with Google."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        id_token = google_tokens.get("id_token")
+        if not id_token:
+            return Response(
+                {"detail": "Google response did not include id_token."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            token_info_response = requests.get(
+                "https://oauth2.googleapis.com/tokeninfo",
+                params={"id_token": id_token},
+                timeout=10,
+            )
+            token_info_response.raise_for_status()
+            token_info = token_info_response.json()
+        except requests.RequestException:
+            return Response(
+                {"detail": "Failed to validate id_token with Google."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if token_info.get("aud") != settings.SOCIAL_AUTH_GOOGLE_CLIENT_ID:
+            return Response(
+                {"detail": "Invalid Google token audience."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        email = token_info.get("email")
+        if not email:
+            return Response(
+                {"detail": "Google account email is missing."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        user = User.objects.filter(email=email).first()
+        if not user:
+            user = User.objects.create(
+                username=self._unique_username(email),
+                email=email,
+                first_name=token_info.get("given_name", ""),
+                last_name=token_info.get("family_name", ""),
+            )
+            user.set_unusable_password()
+            user.save()
+
+        refresh = RefreshToken.for_user(user)
+        return Response(
+            {"access": str(refresh.access_token), "refresh": str(refresh)},
+            status=status.HTTP_200_OK,
+        )
 
 
 def google_callback(request):
